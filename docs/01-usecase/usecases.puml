@@ -1,0 +1,49 @@
+@startuml
+!include ../../_style.puml
+
+left to right direction
+
+actor "Пользователь" as user
+actor "Пассажир" as client
+actor "Водитель" as driver
+actor "Платёжный сервис" as payment <<system>>
+
+client --|> user
+driver --|> user
+
+rectangle "Служба такси" {
+
+    usecase "Зарегистрироваться" as UC_register
+
+    usecase "Заказать поездку" as UC_order
+    usecase "Рассчитать стоимость" as UC_price
+    usecase "Подобрать водителя" as UC_finddriver
+
+    usecase "Принять заказ" as UC_accept
+    usecase "Начать поездку" as UC_start
+    usecase "Завершить поездку" as UC_finish
+
+    usecase "Отменить заказ" as UC_cancel
+    usecase "Оценить поездку" as UC_rate
+    usecase "Оплатить поездку" as UC_pay
+}
+
+client -- UC_register
+client -- UC_order
+client -- UC_cancel
+client -- UC_rate
+client -- UC_pay
+
+driver -- UC_accept
+driver -- UC_start
+driver -- UC_finish
+
+payment -- UC_pay
+
+UC_order ..> UC_price : <<include>>
+UC_order ..> UC_finddriver : <<include>>
+
+UC_cancel ..> UC_order : <<extend>>
+UC_rate ..> UC_finish : <<extend>>
+
+@enduml
