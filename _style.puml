@@ -1,0 +1,4 @@
+skinparam backgroundColor #e9dcde
+skinparam shadowing false
+skinparam defaultFontName Arial
+skinparam monochrome false

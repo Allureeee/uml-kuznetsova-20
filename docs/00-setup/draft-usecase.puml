@@ -1,0 +1,21 @@
+@startuml
+!include ../../_style.puml
+left to right direction
+
+actor "Пассажир" as passenger
+actor "Водитель" as driver
+actor "Платёжный шлюз" as gateway <<system>>
+
+rectangle "Сервис такси" {
+  usecase "Заказать поездку" as UC1
+  usecase "Принять заказ" as UC2
+  usecase "Отменить поездку" as UC3
+  usecase "Оплатить поездку" as UC4
+}
+
+passenger -- UC1
+passenger -- UC3
+driver -- UC2
+passenger -- UC4
+gateway -- UC4
+@enduml

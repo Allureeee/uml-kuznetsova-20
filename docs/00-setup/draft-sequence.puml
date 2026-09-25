@@ -1,0 +1,18 @@
+@startuml
+!include ../../_style.puml
+
+actor "Клиент" as client
+participant "Приложение" as app
+participant "Служба такси" as taxi
+participant "Сервис подбора" as dispatch
+database "БД" as db
+
+client -> app : заказать поездку
+app -> taxi : создать заказ
+taxi -> db : сохранить заказ
+taxi -> dispatch : подобрать водителя
+dispatch --> taxi : водитель найден
+taxi --> app : данные заказа
+app --> client : заказ подтвержден
+
+@enduml
