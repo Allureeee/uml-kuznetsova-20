@@ -1,0 +1,42 @@
+@startuml
+!include ../../_style.puml
+
+title ВИ-02 «Заказать поездку»: основной сценарий
+
+actor "Пассажир" as passenger
+
+participant "Заказ" as order
+participant "Маршрут" as route
+participant "Водитель" as driver
+
+passenger -> order : указатьТочкуОтправления(адрес)
+activate order
+order --> passenger : точкаПринята
+
+passenger -> order : указатьТочкуНазначения(адрес)
+
+order -> route : определить маршрут
+activate route
+route --> order : маршрут
+deactivate route
+
+passenger -> order : подтвердить заказ
+
+order -> order : рассчитатьСтоимость()
+order --> passenger : стоимость
+
+order -> order : создать заказ
+
+loop пока водитель не назначен
+    order -> driver : предложить заказ
+    activate driver
+
+    driver --> order : заказ принят
+    deactivate driver
+
+    order -> order : назначить водителя
+end
+
+order --> passenger : информация о назначенном водителе
+deactivate order
+@enduml
