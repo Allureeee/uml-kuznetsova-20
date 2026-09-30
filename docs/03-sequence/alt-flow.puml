@@ -1,0 +1,109 @@
+@startuml
+!include ../../_style.puml
+
+title ВИ-02 «Заказать поездку»: сценарий с ветвлением
+
+actor "Пассажир" as passenger
+
+participant "Заказ" as order
+participant "Маршрут" as route
+participant "Водитель" as driver
+
+passenger -> order : указатьТочкуОтправления(адрес)
+activate order
+
+alt точка отправления некорректна
+    order --> passenger : точка отправления не определена
+    order ->> passenger : уведомитьОбОшибке()
+
+else точка назначения некорректна
+    passenger -> order : указатьТочкуНазначения(адрес)
+    order -> route : определить маршрут
+    activate route
+    route --> order : маршрут не определён
+    deactivate route
+    order ->> passenger : уведомитьОбОшибкеМаршрута()
+
+else изменился коэффициент стоимости
+    passenger -> order : подтвердить заказ
+    order -> order : рассчитатьСтоимость()
+    order ->> passenger : уведомитьОНовойСтоимость()
+
+else водитель не найден
+    order -> driver : предложить заказ
+    activate driver
+    driver --> order : водитель недоступен
+    deactivate driver
+    order ->> passenger : уведомитьОНедоступности()
+
+else водитель отказался от заказа
+    loop пока не найден принявший водитель
+        order -> driver : предложить заказ
+        activate driver
+        driver --> order : отказ
+        deactivate driver
+    end
+    order ->> passenger : уведомитьОПродолженииПодбора()
+
+else пассажир отменяет заказ
+    opt заказ создан и поездка ещё не началась
+        passenger -> order : отменить()
+        order ->> passenger : заказ отменён
+    end
+end
+deactivate order
+@enduml@startuml
+!include ../../_style.puml
+
+title ВИ-02 «Заказать поездку»: сценарий с ветвлением
+
+actor "Пассажир" as passenger
+
+participant "Заказ" as order
+participant "Маршрут" as route
+participant "Водитель" as driver
+
+passenger -> order : указатьТочкуОтправления(адрес)
+activate order
+
+alt точка отправления некорректна
+    order --> passenger : точка отправления не определена
+    order ->> passenger : уведомитьОбОшибке()
+
+else точка назначения некорректна
+    passenger -> order : указатьТочкуНазначения(адрес)
+    order -> route : определить маршрут
+    activate route
+    route --> order : маршрут не определён
+    deactivate route
+    order ->> passenger : уведомитьОбОшибкеМаршрута()
+
+else изменился коэффициент стоимости
+    passenger -> order : подтвердить заказ
+    order -> order : рассчитатьСтоимость()
+    order ->> passenger : уведомитьОНовойСтоимость()
+
+else водитель не найден
+    order -> driver : предложить заказ
+    activate driver
+    driver --> order : водитель недоступен
+    deactivate driver
+    order ->> passenger : уведомитьОНедоступности()
+
+else водитель отказался от заказа
+    loop пока не найден принявший водитель
+        order -> driver : предложить заказ
+        activate driver
+        driver --> order : отказ
+        deactivate driver
+    end
+    order ->> passenger : уведомитьОПродолженииПодбора()
+
+else пассажир отменяет заказ
+    opt заказ создан и поездка ещё не началась
+        passenger -> order : отменить()
+        order ->> passenger : заказ отменён
+    end
+end
+deactivate order
+@enduml
