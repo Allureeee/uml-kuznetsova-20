@@ -1,0 +1,30 @@
+@startuml
+!include ../../_style.puml
+title Диаграмма коммуникации
+
+object "<u>:Пассажир</u>" as passenger
+object "<u>order : Заказ</u>" as order
+object "<u>route : Маршрут</u>" as route
+object "<u>driver : Водитель</u>" as driver
+
+passenger -- order : 1: указатьТочкуОтправления(адрес) >
+order -- passenger : 1.1: точкаПринята <
+
+passenger -- order : 2: указатьТочкуНазначения(адрес) >
+order -- route : 2.1: определитьМаршрут(адрес) >
+route -- order : 2.2: маршрут <
+
+passenger -- order : 3: подтвердитьЗаказ() >
+order -- order : 3.1: рассчитатьСтоимость() >
+order -- passenger : 3.2: стоимость <
+
+order -- order : 3.3: создатьЗаказ() >
+
+order -- driver : 4: предложитьЗаказ(заказ) >
+driver -- order : 4.1: принятьЗаказ() <
+order -- order : 4.2: назначитьВодителя(водитель) >
+
+order -- passenger : 5: информацияОНазначенномВодителе <
+order -- order : 5.1: перевестиВСостояниеПринят() >
+
+@enduml
