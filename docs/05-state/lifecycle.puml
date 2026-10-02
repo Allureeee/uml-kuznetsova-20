@@ -1,0 +1,40 @@
+@startuml
+!include ../../_style.puml
+
+title Жизненный цикл «Заказ»
+
+hide empty description
+
+state "Создан" as Created
+state "Принят" as Accepted
+state "В пути" as InTrip
+state "Завершен" as Finished
+state "Отменен" as Cancelled
+
+state "Поиск водителя" as Search {
+    state "Выбор водителя" as Select
+    state "Ожидание ответа" as Wait
+
+    [*] --> Select
+    Select --> Wait : предложитьЗаказ()
+    Wait --> Accepted : принятьЗаказ() [водитель подтвердил] / назначитьВодителя()
+    Wait --> Select : отказВодителя() / продолжитьПоиск()
+}
+
+state "Успешное завершение" as Success <<end>>
+state "Неуспешное завершение" as Failure <<end>>
+
+[*] --> Created
+
+Created : entry / зафиксироватьСоздание()
+Created --> Search : начатьПоиск() [заказ создан]
+Search --> Cancelled : отменитьЗаказ() [заказ активен] / прекратитьПодбор()
+Wait --> Cancelled : after(60 сек) / прекратитьПодбор()
+Accepted : entry / уведомитьПассажира()
+Accepted --> InTrip : начатьПоездку() [водитель назначен]
+Accepted --> Cancelled : отменитьЗаказ() [поездка не началась]
+InTrip --> Finished : завершитьПоездку()
+Finished --> Success
+Cancelled --> Failure
+
+@enduml
