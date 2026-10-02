@@ -34,7 +34,7 @@ Accepted : entry / уведомитьПассажира()
 Accepted --> InTrip : начатьПоездку() [водитель назначен]
 Accepted --> Cancelled : отменитьЗаказ() [поездка не началась]
 InTrip --> Finished : завершитьПоездку()
-Finished --> Success
-Cancelled --> Failure
+Finished --> Success : заказ завершен
+Cancelled --> Failure : заказ отменен
 
 @enduml
