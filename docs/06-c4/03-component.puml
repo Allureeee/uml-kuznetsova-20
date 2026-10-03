@@ -1,0 +1,51 @@
+@startuml
+!include <C4/C4_Component>
+
+title Уровень 3 — Components: Сервис заказов и поездок
+
+Container(passengerApp, "Приложение пассажира", "Android / Kotlin", "Заказ, отмена и оценка поездки")
+Container(driverApp, "Приложение водителя", "Android / Kotlin", "Получение и принятие заказов")
+Container(api, "Backend API", "Kotlin / Spring Boot", "Единый API для клиентских приложений")
+Container(driverService, "Сервис подбора водителя", "Kotlin / Spring Boot", "Поиск и назначение водителя")
+
+ContainerDb(db, "Основная БД", "PostgreSQL", "Пользователи, заказы, поездки, тарифы, платежи")
+ContainerQueue(bus, "Очередь событий", "RabbitMQ", "Передача событий между компонентами системы")
+System_Ext(payment, "Платёжный сервис", "Обрабатывает оплату поездки")
+System_Ext(maps, "Сервис карт и маршрутов", "Определяет координаты и строит маршрут")
+
+Container_Boundary(orderService, "Сервис заказов и поездок") {
+    Component(orderComponent, "OrderComponent", "Kotlin", "Управление заказом; класс ПР1: Заказ")
+    Component(tripComponent, "TripComponent", "Kotlin", "Управление поездкой; класс ПР1: Поездка")
+    Component(routeComponent, "RouteComponent", "Kotlin", "Работа с маршрутом; класс ПР1: Маршрут")
+    Component(tariffComponent, "TariffComponent", "Kotlin", "Расчёт стоимости; класс ПР1: Тариф")
+    Component(paymentComponent, "PaymentComponent", "Kotlin", "Подготовка и выполнение оплаты; класс ПР1: Платёж")
+    Component(ratingComponent, "RatingComponent", "Kotlin", "Работа с оценкой завершённой поездки; класс ПР1: Оценка")
+}
+
+Rel(passengerApp, api, "Вызывает", "JSON/HTTPS")
+Rel(driverApp, api, "Вызывает", "JSON/HTTPS")
+
+Rel(api, orderComponent, "Передаёт запросы", "HTTP")
+
+Rel(orderComponent, routeComponent, "Использует маршрут")
+Rel(orderComponent, tariffComponent, "Рассчитывает стоимость")
+Rel(orderComponent, driverService, "Запускает подбор водителя", "HTTP")
+Rel(orderComponent, paymentComponent, "Создаёт платёж")
+Rel(orderComponent, bus, "Публикует события", "AMQP")
+Rel(tripComponent, routeComponent, "Использует маршрут")
+Rel(tripComponent, ratingComponent, "Передаёт данные для оценки")
+
+Rel(orderComponent, tripComponent, "Создаёт и изменяет поездку")
+
+Rel(routeComponent, maps, "Получает маршрут", "HTTPS")
+Rel(paymentComponent, payment, "Передаёт данные оплаты", "HTTPS")
+
+Rel(orderComponent, db, "Читает и записывает заказ", "JDBC")
+Rel(tripComponent, db, "Читает и записывает поездку", "JDBC")
+Rel(tariffComponent, db, "Читает тариф", "JDBC")
+Rel(paymentComponent, db, "Хранит данные платежа", "JDBC")
+Rel(ratingComponent, db, "Хранит оценку", "JDBC")
+
+SHOW_LEGEND()
+
+@enduml
