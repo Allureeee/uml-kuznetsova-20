@@ -1,0 +1,43 @@
+@startuml
+!include <C4/C4_Container>
+
+title Уровень 2 — Containers: Служба такси
+
+Person(passenger, "Пассажир", "Заказывает поездку, отменяет заказ и оценивает поездку")
+Person(driver, "Водитель", "Получает и принимает заказ, выполняет поездку")
+
+System_Ext(payment, "Платёжный сервис", "Обрабатывает оплату поездки")
+System_Ext(maps, "Сервис карт и маршрутов", "Определяет координаты и строит маршрут")
+
+System_Boundary(taxi, "Служба такси") {
+
+    Container(passengerApp, "Приложение пассажира", "Android / Kotlin", "Заказ, отмена и оценка поездки")
+    Container(driverApp, "Приложение водителя", "Android / Kotlin", "Получение и принятие заказов")
+    Container(api, "Backend API", "Kotlin / Spring Boot", "Единый API для клиентских приложений")
+    Container(orderService, "Сервис заказов и поездок", "Kotlin / Spring Boot", "Создание заказов, расчёт стоимости и управление поездками")
+    Container(driverService, "Сервис подбора водителя", "Kotlin / Spring Boot", "Поиск свободного подходящего водителя и его назначение")
+    ContainerDb(db, "Основная БД", "PostgreSQL", "Пользователи, заказы, поездки, тарифы, платежи")
+    ContainerQueue(bus, "Очередь событий", "RabbitMQ", "Передача событий между компонентами системы")
+}
+
+Rel(passenger, passengerApp, "Пользуется", "HTTPS")
+Rel(driver, driverApp, "Пользуется", "HTTPS")
+
+Rel(passengerApp, api, "Вызывает", "JSON/HTTPS")
+Rel(driverApp, api, "Вызывает", "JSON/HTTPS")
+
+Rel(api, orderService, "Передаёт запросы", "HTTP")
+Rel(api, driverService, "Передаёт запросы", "HTTP")
+
+Rel(orderService, db, "Читает и пишет", "JDBC")
+Rel(driverService, db, "Читает данные", "JDBC")
+
+Rel(orderService, bus, "Публикует события", "AMQP")
+Rel(bus, driverService, "Доставляет события", "AMQP")
+
+Rel(orderService, maps, "Получает маршрут", "HTTPS")
+Rel(orderService, payment, "Передаёт данные для оплаты", "HTTPS")
+
+SHOW_LEGEND()
+
+@enduml
