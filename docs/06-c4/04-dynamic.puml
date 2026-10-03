@@ -1,0 +1,41 @@
+@startuml
+!include <C4/C4_Dynamic>
+
+title Динамический вид C4: сценарий «Заказать поездку»
+
+Person(passenger, "Пассажир", "Заказывает поездку")
+Person(driver, "Водитель", "Получает и принимает заказ")
+
+Container(passengerApp, "Приложение пассажира", "Android / Kotlin", "Заказ, отмена и оценка поездки")
+Container(api, "Backend API", "Kotlin / Spring Boot", "Единый API для клиентских приложений")
+Container(orderService, "Сервис заказов и поездок", "Kotlin / Spring Boot", "Создание заказов, расчёт стоимости и управление поездками")
+Container(driverService, "Сервис подбора водителя", "Kotlin / Spring Boot", "Поиск свободного подходящего водителя и его назначение")
+Container(driverApp, "Приложение водителя", "Android / Kotlin", "Получение и принятие заказов")
+ContainerDb(db, "Основная БД", "PostgreSQL", "Пользователи, заказы, поездки, тарифы, платежи")
+
+System_Ext(maps, "Сервис карт и маршрутов", "Определяет координаты и строит маршрут")
+
+RelIndex(1, passenger, passengerApp, "Указывает точку отправления", "HTTPS")
+RelIndex(2, passengerApp, api, "Передаёт точку отправления", "JSON/HTTPS")
+RelIndex(3, api, orderService, "Передаёт данные заказа", "HTTP")
+RelIndex(4, orderService, maps, "Определяет маршрут", "HTTPS")
+RelIndex(5, passenger, passengerApp, "Указывает точку назначения", "HTTPS")
+RelIndex(6, passengerApp, api, "Передаёт точку назначения", "JSON/HTTPS")
+RelIndex(7, passenger, passengerApp, "Подтверждает заказ", "HTTPS")
+RelIndex(8, passengerApp, api, "Передаёт подтверждение", "JSON/HTTPS")
+RelIndex(9, api, orderService, "Рассчитывает стоимость и создаёт заказ", "HTTP")
+RelIndex(10, orderService, db, "Сохраняет заказ", "JDBC")
+RelIndex(11, orderService, driverService, "Запускает подбор водителя", "HTTP")
+RelIndex(12, driverService, driverApp, "Предлагает заказ", "HTTPS")
+RelIndex(13, driverApp, driver, "Показывает предложение заказа")
+RelIndex(14, driver, driverApp, "Принимает заказ")
+RelIndex(15, driverApp, driverService, "Передаёт подтверждение принятия", "HTTPS")
+RelIndex(16, driverService, orderService, "Передаёт результат подбора", "HTTP")
+RelIndex(17, orderService, db, "Назначает водителя заказу", "JDBC")
+RelIndex(18, orderService, api, "Передаёт информацию о назначенном водителе", "HTTP")
+RelIndex(19, api, passengerApp, "Возвращает информацию о заказе", "JSON/HTTPS")
+RelIndex(20, passengerApp, passenger, "Показывает информацию о назначенном водителе")
+
+SHOW_LEGEND()
+
+@enduml
