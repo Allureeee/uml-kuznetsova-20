@@ -4,7 +4,6 @@
 title ВИ-02 «Заказать поездку»: сценарий с ветвлением
 
 actor "Пассажир" as passenger
-
 participant "Заказ" as order
 participant "Маршрут" as route
 participant "Водитель" as driver
@@ -14,96 +13,77 @@ activate order
 
 alt точка отправления некорректна
     order --> passenger : точка отправления не определена
-    order ->> passenger : уведомитьОбОшибке()
+    order ->> passenger : повторить ввод точки отправления
 
-else точка назначения некорректна
+else точка отправления корректна
+
     passenger -> order : указатьТочкуНазначения(адрес)
-    order -> route : определить маршрут
+    order -> route : определитьМаршрут(адрес)
     activate route
-    route --> order : маршрут не определён
-    deactivate route
-    order ->> passenger : уведомитьОбОшибкеМаршрута()
 
-else изменился коэффициент стоимости
-    passenger -> order : подтвердить заказ
-    order -> order : рассчитатьСтоимость()
-    order ->> passenger : уведомитьОНовойСтоимость()
+    alt маршрут не определён
+        route --> order : маршрут не определён
+        deactivate route
+        order ->> passenger : повторить ввод точки назначения
 
-else водитель не найден
-    order -> driver : предложить заказ
-    activate driver
-    driver --> order : водитель недоступен
-    deactivate driver
-    order ->> passenger : уведомитьОНедоступности()
+    else маршрут определён
+        route --> order : маршрут
+        deactivate route
 
-else водитель отказался от заказа
-    loop пока не найден принявший водитель
-        order -> driver : предложить заказ
-        activate driver
-        driver --> order : отказ
-        deactivate driver
-    end
-    order ->> passenger : уведомитьОПродолженииПодбора()
+        passenger -> order : подтвердитьЗаказ()
 
-else пассажир отменяет заказ
-    opt заказ создан и поездка ещё не началась
-        passenger -> order : отменить()
-        order ->> passenger : заказ отменён
+        alt изменился коэффициент стоимости
+            order -> order : рассчитатьСтоимость()
+            order ->> passenger : новая стоимость
+
+        else коэффициент стоимости не изменился
+            order -> order : рассчитатьСтоимость()
+            order --> passenger : стоимость
+        end
+
+        order -> order : создатьЗаказ()
+
+        alt пассажир отменил заказ
+            passenger -> order : отменитьЗаказ()
+            order ->> passenger : заказ отменён
+
+        else пассажир не отменил заказ
+
+            alt подходящий водитель найден
+
+                loop пока водитель не назначен
+
+                    order -> driver : получитьПредложение(заказ)
+                    activate driver
+
+                    alt водитель принял заказ
+                        driver -> driver : принятьЗаказ()
+                        driver --> order : заказ принят
+                        deactivate driver
+
+                        order -> order : назначитьВодителя(водитель)
+                        order -> order : перевестиВСостояниеПринят()
+
+                    else водитель отказался от заказа
+                        driver --> order : отказ
+                        deactivate driver
+
+                    else ответ не получен 60 секунд
+                        deactivate driver
+                        order ->> passenger : подбор прекращён, заказ отменён
+                        break
+
+                    end
+
+                end
+
+            else подходящий водитель не найден
+                order ->> passenger : водитель не найден, заказ остался без назначения
+
+            end
+        end
     end
 end
-deactivate order
-@enduml@startuml
-!include ../../_style.puml
 
-title ВИ-02 «Заказать поездку»: сценарий с ветвлением
-
-actor "Пассажир" as passenger
-
-participant "Заказ" as order
-participant "Маршрут" as route
-participant "Водитель" as driver
-
-passenger -> order : указатьТочкуОтправления(адрес)
-activate order
-
-alt точка отправления некорректна
-    order --> passenger : точка отправления не определена
-    order ->> passenger : уведомитьОбОшибке()
-
-else точка назначения некорректна
-    passenger -> order : указатьТочкуНазначения(адрес)
-    order -> route : определить маршрут
-    activate route
-    route --> order : маршрут не определён
-    deactivate route
-    order ->> passenger : уведомитьОбОшибкеМаршрута()
-
-else изменился коэффициент стоимости
-    passenger -> order : подтвердить заказ
-    order -> order : рассчитатьСтоимость()
-    order ->> passenger : уведомитьОНовойСтоимость()
-
-else водитель не найден
-    order -> driver : предложить заказ
-    activate driver
-    driver --> order : водитель недоступен
-    deactivate driver
-    order ->> passenger : уведомитьОНедоступности()
-
-else водитель отказался от заказа
-    loop пока не найден принявший водитель
-        order -> driver : предложить заказ
-        activate driver
-        driver --> order : отказ
-        deactivate driver
-    end
-    order ->> passenger : уведомитьОПродолженииПодбора()
-
-else пассажир отменяет заказ
-    opt заказ создан и поездка ещё не началась
-        passenger -> order : отменить()
-        order ->> passenger : заказ отменён
-    end
-end
 deactivate order
 @enduml

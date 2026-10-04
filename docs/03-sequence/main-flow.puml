@@ -4,39 +4,44 @@
 title ВИ-02 «Заказать поездку»: основной сценарий
 
 actor "Пассажир" as passenger
-
 participant "Заказ" as order
 participant "Маршрут" as route
 participant "Водитель" as driver
 
 passenger -> order : указатьТочкуОтправления(адрес)
 activate order
+
 order --> passenger : точкаПринята
 
 passenger -> order : указатьТочкуНазначения(адрес)
 
-order -> route : определить маршрут
+order -> route : определитьМаршрут(адрес)
 activate route
 route --> order : маршрут
 deactivate route
 
-passenger -> order : подтвердить заказ
+passenger -> order : подтвердитьЗаказ()
 
 order -> order : рассчитатьСтоимость()
 order --> passenger : стоимость
 
-order -> order : создать заказ
+order -> order : создатьЗаказ()
 
 loop пока водитель не назначен
-    order -> driver : предложить заказ
+    order -> driver : получитьПредложение(заказ)
     activate driver
 
+    driver -> driver : принятьЗаказ()
     driver --> order : заказ принят
+
     deactivate driver
 
-    order -> order : назначить водителя
+    order -> order : назначитьВодителя(водитель)
 end
 
 order --> passenger : информация о назначенном водителе
+order -> order : перевестиВСостояниеПринят()
+
 deactivate order
+
 @enduml
