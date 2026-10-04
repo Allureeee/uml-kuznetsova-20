@@ -1,0 +1,658 @@
+{
+  "configuration" : { },
+  "description" : "Архитектурная модель системы",
+  "documentation" : { },
+  "id" : 1,
+  "lastModifiedDate" : "2026-10-04T16:51:13Z",
+  "model" : {
+    "people" : [ {
+      "description" : "Заказывает поездку, отменяет заказ и оценивает поездку",
+      "id" : "1",
+      "name" : "Пассажир",
+      "properties" : {
+        "structurizr.dsl.identifier" : "passenger"
+      },
+      "relationships" : [ {
+        "description" : "Пользуется",
+        "destinationId" : "6",
+        "id" : "19",
+        "sourceId" : "1",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Пользуется",
+        "destinationId" : "5",
+        "id" : "20",
+        "linkedRelationshipId" : "19",
+        "sourceId" : "1",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Person"
+    }, {
+      "description" : "Получает и принимает заказ, выполняет поездку",
+      "id" : "2",
+      "name" : "Водитель",
+      "properties" : {
+        "structurizr.dsl.identifier" : "driver"
+      },
+      "relationships" : [ {
+        "description" : "Пользуется",
+        "destinationId" : "7",
+        "id" : "21",
+        "sourceId" : "2",
+        "tags" : "Relationship",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Пользуется",
+        "destinationId" : "5",
+        "id" : "22",
+        "linkedRelationshipId" : "21",
+        "sourceId" : "2",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Person"
+    } ],
+    "softwareSystems" : [ {
+      "description" : "Обрабатывает оплату поездки",
+      "documentation" : { },
+      "id" : "3",
+      "name" : "Платёжный сервис",
+      "properties" : {
+        "structurizr.dsl.identifier" : "payment"
+      },
+      "tags" : "Element,Software System,Внешняя"
+    }, {
+      "description" : "Определяет координаты и строит маршрут",
+      "documentation" : { },
+      "id" : "4",
+      "name" : "Сервис карт и маршрутов",
+      "properties" : {
+        "structurizr.dsl.identifier" : "maps"
+      },
+      "tags" : "Element,Software System,Внешняя"
+    }, {
+      "containers" : [ {
+        "description" : "Заказ, отмена и оценка поездки",
+        "documentation" : { },
+        "id" : "6",
+        "name" : "Приложение пассажира",
+        "properties" : {
+          "structurizr.dsl.identifier" : "passengerApp"
+        },
+        "relationships" : [ {
+          "description" : "Вызывает",
+          "destinationId" : "8",
+          "id" : "23",
+          "sourceId" : "6",
+          "tags" : "Relationship",
+          "technology" : "JSON/HTTPS"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Android / Kotlin"
+      }, {
+        "description" : "Получение и принятие заказов",
+        "documentation" : { },
+        "id" : "7",
+        "name" : "Приложение водителя",
+        "properties" : {
+          "structurizr.dsl.identifier" : "driverApp"
+        },
+        "relationships" : [ {
+          "description" : "Вызывает",
+          "destinationId" : "8",
+          "id" : "24",
+          "sourceId" : "7",
+          "tags" : "Relationship",
+          "technology" : "JSON/HTTPS"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Android / Kotlin"
+      }, {
+        "description" : "Единый API для клиентских приложений",
+        "documentation" : { },
+        "id" : "8",
+        "name" : "Backend API",
+        "properties" : {
+          "structurizr.dsl.identifier" : "api"
+        },
+        "relationships" : [ {
+          "description" : "Передаёт запросы",
+          "destinationId" : "9",
+          "id" : "25",
+          "sourceId" : "8",
+          "tags" : "Relationship",
+          "technology" : "HTTP"
+        }, {
+          "description" : "Передаёт запросы",
+          "destinationId" : "16",
+          "id" : "26",
+          "sourceId" : "8",
+          "tags" : "Relationship",
+          "technology" : "HTTP"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Kotlin / Spring Boot"
+      }, {
+        "components" : [ {
+          "description" : "Управление заказом; класс ПР1: Заказ",
+          "documentation" : { },
+          "id" : "10",
+          "name" : "OrderComponent",
+          "properties" : {
+            "structurizr.dsl.identifier" : "orderComponent"
+          },
+          "relationships" : [ {
+            "description" : "Использует маршрут",
+            "destinationId" : "12",
+            "id" : "35",
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Рассчитывает стоимость",
+            "destinationId" : "13",
+            "id" : "36",
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Запускает подбор водителя",
+            "destinationId" : "16",
+            "id" : "37",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "HTTP"
+          }, {
+            "description" : "Создаёт платёж",
+            "destinationId" : "14",
+            "id" : "39",
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Публикует события",
+            "destinationId" : "18",
+            "id" : "40",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "AMQP"
+          }, {
+            "description" : "Создаёт и изменяет поездку",
+            "destinationId" : "11",
+            "id" : "41",
+            "sourceId" : "10",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Читает и записывает заказ",
+            "destinationId" : "17",
+            "id" : "42",
+            "sourceId" : "10",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Kotlin"
+        }, {
+          "description" : "Управление поездкой; класс ПР1: Поездка",
+          "documentation" : { },
+          "id" : "11",
+          "name" : "TripComponent",
+          "properties" : {
+            "structurizr.dsl.identifier" : "tripComponent"
+          },
+          "relationships" : [ {
+            "description" : "Использует маршрут",
+            "destinationId" : "12",
+            "id" : "43",
+            "sourceId" : "11",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Передаёт данные для оценки",
+            "destinationId" : "15",
+            "id" : "44",
+            "sourceId" : "11",
+            "tags" : "Relationship"
+          }, {
+            "description" : "Читает и записывает поездку",
+            "destinationId" : "17",
+            "id" : "45",
+            "sourceId" : "11",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Kotlin"
+        }, {
+          "description" : "Работа с маршрутом; класс ПР1: Маршрут",
+          "documentation" : { },
+          "id" : "12",
+          "name" : "RouteComponent",
+          "properties" : {
+            "structurizr.dsl.identifier" : "routeComponent"
+          },
+          "relationships" : [ {
+            "description" : "Получает маршрут",
+            "destinationId" : "4",
+            "id" : "46",
+            "sourceId" : "12",
+            "tags" : "Relationship",
+            "technology" : "HTTPS"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Kotlin"
+        }, {
+          "description" : "Расчёт стоимости; класс ПР1: Тариф",
+          "documentation" : { },
+          "id" : "13",
+          "name" : "TariffComponent",
+          "properties" : {
+            "structurizr.dsl.identifier" : "tariffComponent"
+          },
+          "relationships" : [ {
+            "description" : "Читает тариф",
+            "destinationId" : "17",
+            "id" : "47",
+            "sourceId" : "13",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Kotlin"
+        }, {
+          "description" : "Подготовка и выполнение оплаты; класс ПР1: Платёж",
+          "documentation" : { },
+          "id" : "14",
+          "name" : "PaymentComponent",
+          "properties" : {
+            "structurizr.dsl.identifier" : "paymentComponent"
+          },
+          "relationships" : [ {
+            "description" : "Передаёт данные оплаты",
+            "destinationId" : "3",
+            "id" : "48",
+            "sourceId" : "14",
+            "tags" : "Relationship",
+            "technology" : "HTTPS"
+          }, {
+            "description" : "Хранит данные платежа",
+            "destinationId" : "17",
+            "id" : "49",
+            "sourceId" : "14",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Kotlin"
+        }, {
+          "description" : "Работа с оценкой завершённой поездки; класс ПР1: Оценка",
+          "documentation" : { },
+          "id" : "15",
+          "name" : "RatingComponent",
+          "properties" : {
+            "structurizr.dsl.identifier" : "ratingComponent"
+          },
+          "relationships" : [ {
+            "description" : "Хранит оценку",
+            "destinationId" : "17",
+            "id" : "50",
+            "sourceId" : "15",
+            "tags" : "Relationship",
+            "technology" : "JDBC"
+          } ],
+          "tags" : "Element,Component",
+          "technology" : "Kotlin"
+        } ],
+        "description" : "Создание заказов, расчёт стоимости и управление поездками",
+        "documentation" : { },
+        "id" : "9",
+        "name" : "Сервис заказов и поездок",
+        "properties" : {
+          "structurizr.dsl.identifier" : "orderService"
+        },
+        "relationships" : [ {
+          "description" : "Читает и записывает",
+          "destinationId" : "17",
+          "id" : "27",
+          "sourceId" : "9",
+          "tags" : "Relationship",
+          "technology" : "JDBC"
+        }, {
+          "description" : "Публикует события",
+          "destinationId" : "18",
+          "id" : "29",
+          "sourceId" : "9",
+          "tags" : "Relationship",
+          "technology" : "AMQP"
+        }, {
+          "description" : "Получает маршрут",
+          "destinationId" : "4",
+          "id" : "31",
+          "sourceId" : "9",
+          "tags" : "Relationship",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Передаёт данные для оплаты",
+          "destinationId" : "3",
+          "id" : "33",
+          "sourceId" : "9",
+          "tags" : "Relationship",
+          "technology" : "HTTPS"
+        }, {
+          "description" : "Запускает подбор водителя",
+          "destinationId" : "16",
+          "id" : "38",
+          "linkedRelationshipId" : "37",
+          "sourceId" : "9",
+          "technology" : "HTTP"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Kotlin / Spring Boot"
+      }, {
+        "description" : "Поиск свободного подходящего водителя и его назначение",
+        "documentation" : { },
+        "id" : "16",
+        "name" : "Сервис подбора водителя",
+        "properties" : {
+          "structurizr.dsl.identifier" : "driverService"
+        },
+        "relationships" : [ {
+          "description" : "Читает данные",
+          "destinationId" : "17",
+          "id" : "28",
+          "sourceId" : "16",
+          "tags" : "Relationship",
+          "technology" : "JDBC"
+        } ],
+        "tags" : "Element,Container",
+        "technology" : "Kotlin / Spring Boot"
+      }, {
+        "description" : "Пользователи, заказы, поездки, тарифы, платежи",
+        "documentation" : { },
+        "id" : "17",
+        "name" : "Основная БД",
+        "properties" : {
+          "structurizr.dsl.identifier" : "db"
+        },
+        "tags" : "Element,Container,Database",
+        "technology" : "PostgreSQL"
+      }, {
+        "description" : "Передача событий между компонентами системы",
+        "documentation" : { },
+        "id" : "18",
+        "name" : "Очередь событий",
+        "properties" : {
+          "structurizr.dsl.identifier" : "bus"
+        },
+        "relationships" : [ {
+          "description" : "Доставляет события",
+          "destinationId" : "16",
+          "id" : "30",
+          "sourceId" : "18",
+          "tags" : "Relationship",
+          "technology" : "AMQP"
+        } ],
+        "tags" : "Element,Container,Queue",
+        "technology" : "RabbitMQ"
+      } ],
+      "description" : "Оформление заказов, подбор водителей, расчёт стоимости и управление поездками",
+      "documentation" : { },
+      "id" : "5",
+      "name" : "Служба такси",
+      "properties" : {
+        "structurizr.dsl.identifier" : "taxi"
+      },
+      "relationships" : [ {
+        "description" : "Получает маршрут",
+        "destinationId" : "4",
+        "id" : "32",
+        "linkedRelationshipId" : "31",
+        "sourceId" : "5",
+        "technology" : "HTTPS"
+      }, {
+        "description" : "Передаёт данные для оплаты",
+        "destinationId" : "3",
+        "id" : "34",
+        "linkedRelationshipId" : "33",
+        "sourceId" : "5",
+        "technology" : "HTTPS"
+      } ],
+      "tags" : "Element,Software System"
+    } ]
+  },
+  "name" : "Служба такси",
+  "properties" : {
+    "structurizr.inspection.error" : "9",
+    "structurizr.dsl" : "d29ya3NwYWNlICLQodC70YPQttCx0LAg0YLQsNC60YHQuCIgItCQ0YDRhdC40YLQtdC60YLRg9GA0L3QsNGPINC80L7QtNC10LvRjCDRgdC40YHRgtC10LzRiyIgewoKICAgIG1vZGVsIHsKICAgICAgICBwYXNzZW5nZXIgPSBwZXJzb24gItCf0LDRgdGB0LDQttC40YAiICLQl9Cw0LrQsNC30YvQstCw0LXRgiDQv9C+0LXQt9C00LrRgywg0L7RgtC80LXQvdGP0LXRgiDQt9Cw0LrQsNC3INC4INC+0YbQtdC90LjQstCw0LXRgiDQv9C+0LXQt9C00LrRgyIKICAgICAgICBkcml2ZXIgPSBwZXJzb24gItCS0L7QtNC40YLQtdC70YwiICLQn9C+0LvRg9GH0LDQtdGCINC4INC/0YDQuNC90LjQvNCw0LXRgiDQt9Cw0LrQsNC3LCDQstGL0L/QvtC70L3Rj9C10YIg0L/QvtC10LfQtNC60YMiCgogICAgICAgIHBheW1lbnQgPSBzb2Z0d2FyZVN5c3RlbSAi0J/Qu9Cw0YLRkdC20L3Ri9C5INGB0LXRgNCy0LjRgSIgItCe0LHRgNCw0LHQsNGC0YvQstCw0LXRgiDQvtC/0LvQsNGC0YMg0L/QvtC10LfQtNC60LgiICLQktC90LXRiNC90Y/RjyIKICAgICAgICBtYXBzID0gc29mdHdhcmVTeXN0ZW0gItCh0LXRgNCy0LjRgSDQutCw0YDRgiDQuCDQvNCw0YDRiNGA0YPRgtC+0LIiICLQntC/0YDQtdC00LXQu9GP0LXRgiDQutC+0L7RgNC00LjQvdCw0YLRiyDQuCDRgdGC0YDQvtC40YIg0LzQsNGA0YjRgNGD0YIiICLQktC90LXRiNC90Y/RjyIKCiAgICAgICAgdGF4aSA9IHNvZnR3YXJlU3lzdGVtICLQodC70YPQttCx0LAg0YLQsNC60YHQuCIgItCe0YTQvtGA0LzQu9C10L3QuNC1INC30LDQutCw0LfQvtCyLCDQv9C+0LTQsdC+0YAg0LLQvtC00LjRgtC10LvQtdC5LCDRgNCw0YHRh9GR0YIg0YHRgtC+0LjQvNC+0YHRgtC4INC4INGD0L/RgNCw0LLQu9C10L3QuNC1INC/0L7QtdC30LTQutCw0LzQuCIgewoKICAgICAgICAgICAgcGFzc2VuZ2VyQXBwID0gY29udGFpbmVyICLQn9GA0LjQu9C+0LbQtdC90LjQtSDQv9Cw0YHRgdCw0LbQuNGA0LAiICLQl9Cw0LrQsNC3LCDQvtGC0LzQtdC90LAg0Lgg0L7RhtC10L3QutCwINC/0L7QtdC30LTQutC4IiAiQW5kcm9pZCAvIEtvdGxpbiIKCiAgICAgICAgICAgIGRyaXZlckFwcCA9IGNvbnRhaW5lciAi0J/RgNC40LvQvtC20LXQvdC40LUg0LLQvtC00LjRgtC10LvRjyIgItCf0L7Qu9GD0YfQtdC90LjQtSDQuCDQv9GA0LjQvdGP0YLQuNC1INC30LDQutCw0LfQvtCyIiAiQW5kcm9pZCAvIEtvdGxpbiIKCiAgICAgICAgICAgIGFwaSA9IGNvbnRhaW5lciAiQmFja2VuZCBBUEkiICLQldC00LjQvdGL0LkgQVBJINC00LvRjyDQutC70LjQtdC90YLRgdC60LjRhSDQv9GA0LjQu9C+0LbQtdC90LjQuSIgIktvdGxpbiAvIFNwcmluZyBCb290IgoKICAgICAgICAgICAgb3JkZXJTZXJ2aWNlID0gY29udGFpbmVyICLQodC10YDQstC40YEg0LfQsNC60LDQt9C+0LIg0Lgg0L/QvtC10LfQtNC+0LoiICLQodC+0LfQtNCw0L3QuNC1INC30LDQutCw0LfQvtCyLCDRgNCw0YHRh9GR0YIg0YHRgtC+0LjQvNC+0YHRgtC4INC4INGD0L/RgNCw0LLQu9C10L3QuNC1INC/0L7QtdC30LTQutCw0LzQuCIgIktvdGxpbiAvIFNwcmluZyBCb290IiB7CiAgICAgICAgICAgICAgICBvcmRlckNvbXBvbmVudCA9IGNvbXBvbmVudCAiT3JkZXJDb21wb25lbnQiICLQo9C/0YDQsNCy0LvQtdC90LjQtSDQt9Cw0LrQsNC30L7QvDsg0LrQu9Cw0YHRgSDQn9CgMTog0JfQsNC60LDQtyIgIktvdGxpbiIKICAgICAgICAgICAgICAgIHRyaXBDb21wb25lbnQgPSBjb21wb25lbnQgIlRyaXBDb21wb25lbnQiICLQo9C/0YDQsNCy0LvQtdC90LjQtSDQv9C+0LXQt9C00LrQvtC5OyDQutC70LDRgdGBINCf0KAxOiDQn9C+0LXQt9C00LrQsCIgIktvdGxpbiIKICAgICAgICAgICAgICAgIHJvdXRlQ29tcG9uZW50ID0gY29tcG9uZW50ICJSb3V0ZUNvbXBvbmVudCIgItCg0LDQsdC+0YLQsCDRgSDQvNCw0YDRiNGA0YPRgtC+0Lw7INC60LvQsNGB0YEg0J/QoDE6INCc0LDRgNGI0YDRg9GCIiAiS290bGluIgogICAgICAgICAgICAgICAgdGFyaWZmQ29tcG9uZW50ID0gY29tcG9uZW50ICJUYXJpZmZDb21wb25lbnQiICLQoNCw0YHRh9GR0YIg0YHRgtC+0LjQvNC+0YHRgtC4OyDQutC70LDRgdGBINCf0KAxOiDQotCw0YDQuNGEIiAiS290bGluIgogICAgICAgICAgICAgICAgcGF5bWVudENvbXBvbmVudCA9IGNvbXBvbmVudCAiUGF5bWVudENvbXBvbmVudCIgItCf0L7QtNCz0L7RgtC+0LLQutCwINC4INCy0YvQv9C+0LvQvdC10L3QuNC1INC+0L/Qu9Cw0YLRizsg0LrQu9Cw0YHRgSDQn9CgMTog0J/Qu9Cw0YLRkdC2IiAiS290bGluIgogICAgICAgICAgICAgICAgcmF0aW5nQ29tcG9uZW50ID0gY29tcG9uZW50ICJSYXRpbmdDb21wb25lbnQiICLQoNCw0LHQvtGC0LAg0YEg0L7RhtC10L3QutC+0Lkg0LfQsNCy0LXRgNGI0ZHQvdC90L7QuSDQv9C+0LXQt9C00LrQuDsg0LrQu9Cw0YHRgSDQn9CgMTog0J7RhtC10L3QutCwIiAiS290bGluIgogICAgICAgICAgICB9CgogICAgICAgICAgICBkcml2ZXJTZXJ2aWNlID0gY29udGFpbmVyICLQodC10YDQstC40YEg0L/QvtC00LHQvtGA0LAg0LLQvtC00LjRgtC10LvRjyIgItCf0L7QuNGB0Log0YHQstC+0LHQvtC00L3QvtCz0L4g0L/QvtC00YXQvtC00Y/RidC10LPQviDQstC+0LTQuNGC0LXQu9GPINC4INC10LPQviDQvdCw0LfQvdCw0YfQtdC90LjQtSIgIktvdGxpbiAvIFNwcmluZyBCb290IgoKICAgICAgICAgICAgZGIgPSBjb250YWluZXIgItCe0YHQvdC+0LLQvdCw0Y8g0JHQlCIgItCf0L7Qu9GM0LfQvtCy0LDRgtC10LvQuCwg0LfQsNC60LDQt9GLLCDQv9C+0LXQt9C00LrQuCwg0YLQsNGA0LjRhNGLLCDQv9C70LDRgtC10LbQuCIgIlBvc3RncmVTUUwiICJEYXRhYmFzZSIKCiAgICAgICAgICAgIGJ1cyA9IGNvbnRhaW5lciAi0J7Rh9C10YDQtdC00Ywg0YHQvtCx0YvRgtC40LkiICLQn9C10YDQtdC00LDRh9CwINGB0L7QsdGL0YLQuNC5INC80LXQttC00YMg0LrQvtC80L/QvtC90LXQvdGC0LDQvNC4INGB0LjRgdGC0LXQvNGLIiAiUmFiYml0TVEiICJRdWV1ZSIKICAgICAgICB9CgogICAgICAgIHBhc3NlbmdlciAtPiBwYXNzZW5nZXJBcHAgItCf0L7Qu9GM0LfRg9C10YLRgdGPIiAiSFRUUFMiCiAgICAgICAgZHJpdmVyIC0+IGRyaXZlckFwcCAi0J/QvtC70YzQt9GD0LXRgtGB0Y8iICJIVFRQUyIKCiAgICAgICAgcGFzc2VuZ2VyQXBwIC0+IGFwaSAi0JLRi9C30YvQstCw0LXRgiIgIkpTT04vSFRUUFMiCiAgICAgICAgZHJpdmVyQXBwIC0+IGFwaSAi0JLRi9C30YvQstCw0LXRgiIgIkpTT04vSFRUUFMiCgogICAgICAgIGFwaSAtPiBvcmRlclNlcnZpY2UgItCf0LXRgNC10LTQsNGR0YIg0LfQsNC/0YDQvtGB0YsiICJIVFRQIgogICAgICAgIGFwaSAtPiBkcml2ZXJTZXJ2aWNlICLQn9C10YDQtdC00LDRkdGCINC30LDQv9GA0L7RgdGLIiAiSFRUUCIKCiAgICAgICAgb3JkZXJTZXJ2aWNlIC0+IGRiICLQp9C40YLQsNC10YIg0Lgg0LfQsNC/0LjRgdGL0LLQsNC10YIiICJKREJDIgogICAgICAgIGRyaXZlclNlcnZpY2UgLT4gZGIgItCn0LjRgtCw0LXRgiDQtNCw0L3QvdGL0LUiICJKREJDIgoKICAgICAgICBvcmRlclNlcnZpY2UgLT4gYnVzICLQn9GD0LHQu9C40LrRg9C10YIg0YHQvtCx0YvRgtC40Y8iICJBTVFQIgogICAgICAgIGJ1cyAtPiBkcml2ZXJTZXJ2aWNlICLQlNC+0YHRgtCw0LLQu9GP0LXRgiDRgdC+0LHRi9GC0LjRjyIgIkFNUVAiCgogICAgICAgIG9yZGVyU2VydmljZSAtPiBtYXBzICLQn9C+0LvRg9GH0LDQtdGCINC80LDRgNGI0YDRg9GCIiAiSFRUUFMiCiAgICAgICAgb3JkZXJTZXJ2aWNlIC0+IHBheW1lbnQgItCf0LXRgNC10LTQsNGR0YIg0LTQsNC90L3Ri9C1INC00LvRjyDQvtC/0LvQsNGC0YsiICJIVFRQUyIKCiAgICAgICAgb3JkZXJDb21wb25lbnQgLT4gcm91dGVDb21wb25lbnQgItCY0YHQv9C+0LvRjNC30YPQtdGCINC80LDRgNGI0YDRg9GCIgogICAgICAgIG9yZGVyQ29tcG9uZW50IC0+IHRhcmlmZkNvbXBvbmVudCAi0KDQsNGB0YHRh9C40YLRi9Cy0LDQtdGCINGB0YLQvtC40LzQvtGB0YLRjCIKICAgICAgICBvcmRlckNvbXBvbmVudCAtPiBkcml2ZXJTZXJ2aWNlICLQl9Cw0L/Rg9GB0LrQsNC10YIg0L/QvtC00LHQvtGAINCy0L7QtNC40YLQtdC70Y8iICJIVFRQIgogICAgICAgIG9yZGVyQ29tcG9uZW50IC0+IHBheW1lbnRDb21wb25lbnQgItCh0L7Qt9C00LDRkdGCINC/0LvQsNGC0ZHQtiIKICAgICAgICBvcmRlckNvbXBvbmVudCAtPiBidXMgItCf0YPQsdC70LjQutGD0LXRgiDRgdC+0LHRi9GC0LjRjyIgIkFNUVAiCiAgICAgICAgb3JkZXJDb21wb25lbnQgLT4gdHJpcENvbXBvbmVudCAi0KHQvtC30LTQsNGR0YIg0Lgg0LjQt9C80LXQvdGP0LXRgiDQv9C+0LXQt9C00LrRgyIKICAgICAgICBvcmRlckNvbXBvbmVudCAtPiBkYiAi0KfQuNGC0LDQtdGCINC4INC30LDQv9C40YHRi9Cy0LDQtdGCINC30LDQutCw0LciICJKREJDIgoKICAgICAgICB0cmlwQ29tcG9uZW50IC0+IHJvdXRlQ29tcG9uZW50ICLQmNGB0L/QvtC70YzQt9GD0LXRgiDQvNCw0YDRiNGA0YPRgiIKICAgICAgICB0cmlwQ29tcG9uZW50IC0+IHJhdGluZ0NvbXBvbmVudCAi0J/QtdGA0LXQtNCw0ZHRgiDQtNCw0L3QvdGL0LUg0LTQu9GPINC+0YbQtdC90LrQuCIKICAgICAgICB0cmlwQ29tcG9uZW50IC0+IGRiICLQp9C40YLQsNC10YIg0Lgg0LfQsNC/0LjRgdGL0LLQsNC10YIg0L/QvtC10LfQtNC60YMiICJKREJDIgoKICAgICAgICByb3V0ZUNvbXBvbmVudCAtPiBtYXBzICLQn9C+0LvRg9GH0LDQtdGCINC80LDRgNGI0YDRg9GCIiAiSFRUUFMiCgogICAgICAgIHRhcmlmZkNvbXBvbmVudCAtPiBkYiAi0KfQuNGC0LDQtdGCINGC0LDRgNC40YQiICJKREJDIgoKICAgICAgICBwYXltZW50Q29tcG9uZW50IC0+IHBheW1lbnQgItCf0LXRgNC10LTQsNGR0YIg0LTQsNC90L3Ri9C1INC+0L/Qu9Cw0YLRiyIgIkhUVFBTIgogICAgICAgIHBheW1lbnRDb21wb25lbnQgLT4gZGIgItCl0YDQsNC90LjRgiDQtNCw0L3QvdGL0LUg0L/Qu9Cw0YLQtdC20LAiICJKREJDIgoKICAgICAgICByYXRpbmdDb21wb25lbnQgLT4gZGIgItCl0YDQsNC90LjRgiDQvtGG0LXQvdC60YMiICJKREJDIgogICAgfQoKICAgIHZpZXdzIHsKICAgICAgICBzeXN0ZW1Db250ZXh0IHRheGkgIkNvbnRleHQiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CiAgICAgICAgY29udGFpbmVyIHRheGkgIkNvbnRhaW5lcnMiIHsKICAgICAgICAgICAgaW5jbHVkZSAqCiAgICAgICAgICAgIGF1dG9sYXlvdXQgbHIKICAgICAgICB9CiAgICAgICAgY29tcG9uZW50IG9yZGVyU2VydmljZSAiQ29tcG9uZW50cyIgewogICAgICAgICAgICBpbmNsdWRlICoKICAgICAgICAgICAgYXV0b2xheW91dCBscgogICAgICAgIH0KICAgICAgICB0aGVtZSBkZWZhdWx0CiAgICB9Cn0=",
+    "structurizr.inspection.info" : "0",
+    "structurizr.inspection.ignore" : "0",
+    "structurizr.inspection.warning" : "0"
+  },
+  "views" : {
+    "componentViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "containerId" : "9",
+      "elements" : [ {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "10",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "11",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "12",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "13",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "14",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "15",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "17",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "18",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalContainerBoundariesVisible" : false,
+      "key" : "Components",
+      "name" : "Component View: Служба такси - Сервис заказов и поездок",
+      "order" : 3,
+      "relationships" : [ {
+        "id" : "28"
+      }, {
+        "id" : "30"
+      }, {
+        "id" : "35"
+      }, {
+        "id" : "36"
+      }, {
+        "id" : "37"
+      }, {
+        "id" : "39"
+      }, {
+        "id" : "40"
+      }, {
+        "id" : "41"
+      }, {
+        "id" : "42"
+      }, {
+        "id" : "43"
+      }, {
+        "id" : "44"
+      }, {
+        "id" : "45"
+      }, {
+        "id" : "46"
+      }, {
+        "id" : "47"
+      }, {
+        "id" : "48"
+      }, {
+        "id" : "49"
+      }, {
+        "id" : "50"
+      } ]
+    } ],
+    "configuration" : {
+      "styles" : { },
+      "terminology" : { },
+      "themes" : [ "https://static.structurizr.com/themes/default/theme.json" ]
+    },
+    "containerViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "6",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "7",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "8",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "9",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "16",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "17",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "18",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "externalSoftwareSystemBoundariesVisible" : false,
+      "key" : "Containers",
+      "name" : "Container View: Служба такси",
+      "order" : 2,
+      "relationships" : [ {
+        "id" : "19"
+      }, {
+        "id" : "21"
+      }, {
+        "id" : "23"
+      }, {
+        "id" : "24"
+      }, {
+        "id" : "25"
+      }, {
+        "id" : "26"
+      }, {
+        "id" : "27"
+      }, {
+        "id" : "28"
+      }, {
+        "id" : "29"
+      }, {
+        "id" : "30"
+      }, {
+        "id" : "31"
+      }, {
+        "id" : "33"
+      }, {
+        "id" : "38"
+      } ],
+      "softwareSystemId" : "5"
+    } ],
+    "systemContextViews" : [ {
+      "automaticLayout" : {
+        "edgeSeparation" : 50,
+        "nodeSeparation" : 50,
+        "rankDirection" : "LeftRight",
+        "rankSeparation" : 100,
+        "vertices" : true
+      },
+      "elements" : [ {
+        "id" : "1",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "2",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "3",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "4",
+        "x" : 0,
+        "y" : 0
+      }, {
+        "id" : "5",
+        "x" : 0,
+        "y" : 0
+      } ],
+      "enterpriseBoundaryVisible" : true,
+      "key" : "Context",
+      "name" : "System Context View: Служба такси",
+      "order" : 1,
+      "relationships" : [ {
+        "id" : "20"
+      }, {
+        "id" : "22"
+      }, {
+        "id" : "32"
+      }, {
+        "id" : "34"
+      } ],
+      "softwareSystemId" : "5"
+    } ]
+  }
+}
