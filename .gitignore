@@ -4,3 +4,5 @@ out/
 
 # PlantUML
 plantuml.jar
+# Служебная папка Structurizr Local
+.structurizr/
