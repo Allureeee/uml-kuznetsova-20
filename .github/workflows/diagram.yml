@@ -1,13 +1,10 @@
 name: Render diagrams
 on:
-  push:
-    paths:
-      - 'docs/**/*.puml'
-      - '_style.puml'
-  pull_request:
-    paths:
-      - 'docs/**/*.puml'
-      - '_style.puml'
+    push:
+        paths: ['docs/**/*.puml', '_style.puml']
+    pull_request:
+        paths: ['docs/**/*.puml', '_style.puml']
+    workflow_dispatch:
 jobs:
   render:
     runs-on: ubuntu-latest
