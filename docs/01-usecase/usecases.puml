@@ -7,6 +7,7 @@ actor "Пользователь" as user
 actor "Пассажир" as client
 actor "Водитель" as driver
 actor "Платёжный сервис" as payment <<system>>
+actor "Сервис карт и маршрутов" as maps <<system>>
 
 client --|> user
 driver --|> user
@@ -39,6 +40,7 @@ driver -- UC_start
 driver -- UC_finish
 
 payment -- UC_pay
+maps -- UC_order
 
 UC_order ..> UC_price : <<include>>
 UC_order ..> UC_finddriver : <<include>>
