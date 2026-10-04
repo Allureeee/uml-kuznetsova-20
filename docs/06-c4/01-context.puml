@@ -18,5 +18,3 @@ Rel(taxi, payment, "Передаёт данные для оплаты", "HTTPS")
 Rel(taxi, maps, "Получает координаты и маршрут", "HTTPS")
 
 SHOW_LEGEND()
-
-@enduml
